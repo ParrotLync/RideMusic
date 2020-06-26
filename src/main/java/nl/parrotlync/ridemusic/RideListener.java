@@ -17,9 +17,11 @@ public class RideListener implements Listener {
         MinecartMember<?> member = MinecartMemberStore.getFromEntity(event.getVehicle());
         if (member == null) { return; }
         if (event.getEntered() instanceof Player) {
-            Player player = (Player) event.getEntered();
-            String identifier = member.getGroup().getProperties().getTrainName();
-            JukeboxAPI.getShowManager().getShow(identifier).addMember(player, false);
+            if (member.getGroup().getProperties().getTags().contains("RideMusic")) {
+                Player player = (Player) event.getEntered();
+                String identifier = member.getGroup().getProperties().getTrainName();
+                JukeboxAPI.getShowManager().getShow(identifier).addMember(player, false);
+            }
         }
     }
 
@@ -28,9 +30,11 @@ public class RideListener implements Listener {
         MinecartMember<?> member = MinecartMemberStore.getFromEntity(event.getVehicle());
         if (member == null) { return; }
         if (event.getExited() instanceof Player) {
-            Player player = (Player) event.getExited();
-            String identifier = member.getGroup().getProperties().getTrainName();
-            JukeboxAPI.getShowManager().getShow(identifier).removeMember(player);
+            if (member.getGroup().getProperties().getTags().contains("RideMusic")) {
+                Player player = (Player) event.getExited();
+                String identifier = member.getGroup().getProperties().getTrainName();
+                JukeboxAPI.getShowManager().getShow(identifier).removeMember(player);
+            }
         }
     }
 }
