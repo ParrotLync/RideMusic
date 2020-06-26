@@ -1,0 +1,7 @@
+main: nl.parrotlync.ridemusic.RideMusic
+name: ParkManager
+version: '0.1'
+description: Management plugin for ScotchCraft Park
+api-version: 1.16
+author: ParrotLync
+depend: [MCJukebox, TrainCarts]
