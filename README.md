@@ -9,3 +9,7 @@ The name of the show is identical to the name of the train, and the players will
 - Spawn a train
 - Name the train & give it the tag "RideMusic"
 - All done! Players will now be added to a show identical to the name of the train.
+
+###Dependencies
+- MCJukebox (shows for music)
+- TrainCarts (trains)
