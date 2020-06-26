@@ -1,7 +1,18 @@
 main: nl.parrotlync.ridemusic.RideMusic
 name: RideMusic
-version: '1.0'
+version: '1.1'
 description: TrainCarts integration for MCJukeBox
 api-version: 1.15
 author: ParrotLync
 depend: [MCJukebox, Train_Carts]
+commands:
+  ridemusic:
+    description: Default RideMusic command
+    usage: /ridemusic
+permissions:
+  ridemusic.use:
+    default: op
+    description: Permission to use RideMusic commands
+  ridemusic.build:
+    default: op
+    description: Permission to build signs for RideMusic
