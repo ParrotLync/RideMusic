@@ -3,12 +3,13 @@ package nl.parrotlync.ridemusic;
 import com.bergerkiller.bukkit.tc.events.SignActionEvent;
 import com.bergerkiller.bukkit.tc.events.SignChangeActionEvent;
 import com.bergerkiller.bukkit.tc.signactions.SignAction;
+import com.bergerkiller.bukkit.tc.signactions.SignActionType;
 import de.leonhard.storage.Json;
 import net.mcjukebox.plugin.bukkit.api.JukeboxAPI;
 import net.mcjukebox.plugin.bukkit.api.ResourceType;
 import net.mcjukebox.plugin.bukkit.api.models.Media;
 import nl.parrotlync.ridemusic.util.ChatUtil;
-import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 
 public class RideSignAction extends SignAction {
     private Json json = new Json("shortcodes", "plugins/RideMusic");
@@ -20,22 +21,23 @@ public class RideSignAction extends SignAction {
 
     @Override
     public void execute(SignActionEvent info) {
-        String identifier = info.getGroup().getProperties().getTrainName();
-        if (info.getLine(2).equals("music")) {
+        if (!info.isPowered()) { return; }
+        String name = info.getGroup().getProperties().getTrainName();
+        if (info.getLine(2).equalsIgnoreCase("music")) {
             String url = String.valueOf(json.get(info.getLine(3)));
             Media media = new Media(ResourceType.MUSIC, url);
             media.setLooping(false);
-            JukeboxAPI.getShowManager().getShow(identifier).play(media);
+            JukeboxAPI.getShowManager().getShow(name).play(media);
             return;
         }
-        if (info.getLine(2).equals("sound")) {
+        if (info.getLine(2).equalsIgnoreCase("sound")) {
             String url = String.valueOf(json.get(info.getLine(3)));
             Media media = new Media(ResourceType.SOUND_EFFECT, url);
-            JukeboxAPI.getShowManager().getShow(identifier).play(media);
+            JukeboxAPI.getShowManager().getShow(name).play(media);
             return;
         }
-        if (info.getLine(2).equals("stop")) {
-            JukeboxAPI.getShowManager().getShow(identifier).stopMusic();
+        if (info.getLine(2).equalsIgnoreCase("stop")) {
+            JukeboxAPI.getShowManager().getShow(name).stopMusic();
         }
     }
 
@@ -45,7 +47,7 @@ public class RideSignAction extends SignAction {
             return false;
         } else if (event.isTrainSign()) {
             if (event.getPlayer().hasPermission("ridemusic.build")) {
-                if (event.getLine(2).equals("music") || event.getLine(2).equals("sound")) {
+                if (event.getLine(2).equalsIgnoreCase("music") || event.getLine(2).equalsIgnoreCase("sound")) {
                     String url = String.valueOf(json.get(event.getLine(3)));
                     if (url.equals("null")) {
                         ChatUtil.sendMessage(event.getPlayer(), "&cThat shortcode doesn't exist. Please add it first with &3/ridemusic add", true);
@@ -54,7 +56,7 @@ public class RideSignAction extends SignAction {
                     ChatUtil.sendMessage(event.getPlayer(), "&7You have &acreated &7a RideMusic sign!", true);
                     ChatUtil.sendMessage(event.getPlayer(), "&7URL: " + url, true);
                     return true;
-                } else if(event.getLine(2).equals("stop")) {
+                } else if(event.getLine(2).equalsIgnoreCase("stop")) {
                     ChatUtil.sendMessage(event.getPlayer(), "&7You have &acreated &7a RideMusic stop sign!", true);
                     return true;
                 }
