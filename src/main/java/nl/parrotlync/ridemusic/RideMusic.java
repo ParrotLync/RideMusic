@@ -1,7 +1,7 @@
 package nl.parrotlync.ridemusic;
 
 import com.bergerkiller.bukkit.tc.signactions.SignAction;
-import nl.parrotlync.ridemusic.commands.RideCommandExecutor;
+import nl.parrotlync.ridemusic.util.UpdateChecker;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RideMusic extends JavaPlugin {
@@ -12,6 +12,13 @@ public class RideMusic extends JavaPlugin {
         this.getCommand("ridemusic").setExecutor(new RideCommandExecutor());
         SignAction.register(new RideSignAction());
         getLogger().info("RideMusic is now enabled!");
+        new UpdateChecker(this, 80710).getVersion(version -> {
+            if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                getLogger().info("You are on the newest version.");
+            } else {
+                getLogger().info("There is a new version available! https://www.spigotmc.org/resources/ridemusic.80710/");
+            }
+        });
     }
 
     @Override

@@ -1,4 +1,4 @@
-package nl.parrotlync.ridemusic.commands;
+package nl.parrotlync.ridemusic;
 
 import de.leonhard.storage.Json;
 import nl.parrotlync.ridemusic.util.ChatUtil;
