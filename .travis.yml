@@ -7,6 +7,7 @@ deploy:
   api_key:
     secure: cRfAh6WnlXPvuwQlSBxOT/5pW/e20d2oRGsC3Md4cVLOeBjovggwIVuQ65oa9GDIjlX+nrYvCduTTU7PuXqvBtZD341VRoHzXiHBPUJZeO01a3EgM4utJblJmgqALyUPF24XBcPwOi4adsuztKotLc+Uj11hpClHM9IKWoLMd6UtYgNIDjpe0X1PIcfyq3kawaCH6/Uw6uk+xunCgNLjN3JVwkFIoZlyqw3v9ypTjHsMKK9Mmhpyh9PHq69XMBob3R8QVccBzpbBnSEB3biPgwhSGRT0pmXUJv/t8QXtKiweugloGgteYNEuquznUtS1zfs2ywNZiwsJ5PJanerxN4+JhhlUEWZy8OjOCPLC9QiMDQ6O0PvQWOWcKr0166nPGB/lGfYsU/5KWEzTnXb+6RJTIHxx9DybHnY6hFD4WsXcKrzdmtUD78atf8upaq9oH0f5jNsdf+/1L+J+egyvxADlhjSm+f9IpeT+f694lLx11fEEdOXr3NYxDz49/FtrzkTPYx918cb+rTz2s5mTvkCsKlH63iFCm57KS1NrNyIcmfaVmIJJdyBw0iqNZrlwoWmt7LNCuAlbxMqrrz74LmMKGAdWd/XaYO0COEqBeIm1TQB/r8grYrpQa/9aYlw+zelC2GSDc4YPSNz6CypZj+zc3fSw2dqVVFJNpTqWFbI=
   file: target/*
+  file_glob: true
   on:
     repo: ParrotLync/RideMusic
     tags: true
