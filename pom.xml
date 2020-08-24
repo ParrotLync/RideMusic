@@ -5,7 +5,7 @@
 
     <groupId>nl.parrotlync</groupId>
     <artifactId>RideMusic</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.3</version>
     <build>
         <plugins>
             <plugin>
@@ -14,28 +14,6 @@
                 <configuration>
                     <source>8</source>
                     <target>8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <relocations>
-                        <relocation>
-                            <pattern>de.leonhard.storage</pattern>
-                            <shadedPattern>nl.parrotlync.ridemusic</shadedPattern>
-                        </relocation>
-                    </relocations>
                 </configuration>
             </plugin>
         </plugins>
@@ -54,13 +32,17 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/oliverdunk/JukeboxAPI</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.1-R0.1-SNAPSHOT</version>
+            <version>1.16.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -82,11 +64,5 @@
             <version>1.15.2-v1</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.github.JavaFactoryDev</groupId>
-            <artifactId>LightningStorage</artifactId>
-            <version>3.1.4</version>
-        </dependency>
     </dependencies>
-
 </project>

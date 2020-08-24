@@ -1,71 +1,77 @@
 package nl.parrotlync.ridemusic;
 
-import de.leonhard.storage.Json;
 import nl.parrotlync.ridemusic.util.ChatUtil;
+import nl.parrotlync.ridemusic.util.DataUtil;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class RideCommandExecutor implements CommandExecutor {
-    private Json json = new Json("shortcodes", "plugins/RideMusic");
+public class RideCommandExecutor implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            return help(sender);
-        }
-
-        if (args[0].equalsIgnoreCase("help")) {
-            return help(sender);
-        }
-
-        if (args[0].equalsIgnoreCase("add")) {
-            if (args.length == 3) {
-                json.set(args[1], args[2]);
-                Object url = json.get(args[1]);
-                ChatUtil.sendHoverMessage(sender, "&7You added a shortcode!", "&7[&a" + args[1] + "&7]", String.valueOf(url), true);
-                return true;
+        Player player = (Player) sender;
+        if (player.hasPermission("ridemusic.use")) {
+            if (args.length == 0) {
+                return help(sender);
             }
-        }
 
-        if (args[0].equalsIgnoreCase("remove")) {
-            if (args.length == 2) {
-                Object url = json.get(args[1]);
-                json.remove(args[1]);
-                ChatUtil.sendHoverMessage(sender, "&7You removed a shortcode!", "&7[&a" + args[1] + "&7]", String.valueOf(url), true);
-                return true;
+            if (args[0].equalsIgnoreCase("help")) {
+                return help(sender);
             }
-        }
 
-        if (args[0].equalsIgnoreCase("list")) {
-            Map<String, Object> shortcodes = json.getData();
-            List<String> keys = new ArrayList<String>(shortcodes.keySet());
-            int numberOfPages = (int) Math.ceil((shortcodes.size() / 5) + 1);
-
-            int page = 1;
-            if (args.length == 2) {
-                try {
-                    page = Integer.parseInt(args[1]);
-                    if (page > numberOfPages) { return false; }
-                } catch (NumberFormatException e) {
-                    return false;
+            if (args[0].equalsIgnoreCase("add")) {
+                if (args.length == 3) {
+                    RideMusic.shortCodes.put(args[1], args[2]);
+                    DataUtil.saveObjectToPath(RideMusic.shortCodes, RideMusic.path);
+                    ChatUtil.sendMessage(sender, "&7You added a shortcode! &7[&a" + args[1] + "&7]", true);
+                    return true;
                 }
             }
 
-            ChatUtil.sendMessage(sender, "&f+---+ &aRideMusic &bshortcode list &7(page " + page + ") &f+---+", false);
-            for (int i = (page - 1) * 5 ; i < page * 5 && i < shortcodes.size(); i++) {
-                ChatUtil.sendMessage(sender, "&6" + keys.get(i) + "&7: " + shortcodes.get(keys.get(i)), false);
+            if (args[0].equalsIgnoreCase("remove")) {
+                if (args.length == 2) {
+                    String url = RideMusic.shortCodes.get(args[1]);
+                    RideMusic.shortCodes.remove(args[1]);
+                    DataUtil.saveObjectToPath(RideMusic.shortCodes, RideMusic.path);
+                    ChatUtil.sendMessage(sender, "&7You removed a shortcode! &7[&c" + args[1] + "&7]", true);
+                    return true;
+                }
             }
-            if (page < numberOfPages) {
-                ChatUtil.sendMessage(sender, "&3Type '/ridemusic list " + (page + 1) + "' to see more.", false);
+
+            if (args[0].equalsIgnoreCase("list")) {
+                List<String> keys = new ArrayList<>(RideMusic.shortCodes.keySet());
+                int numberOfPages = (int) Math.ceil((RideMusic.shortCodes.size() / 5) + 1);
+
+                int page = 1;
+                if (args.length == 2) {
+                    try {
+                        page = Integer.parseInt(args[1]);
+                        if (page > numberOfPages) { return false; }
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                }
+
+                ChatUtil.sendMessage(sender, "&f+---+ &aRideMusic &bShortcode List &7(page " + page + ") &f+---+", false);
+                for (int i = (page - 1) * 5 ; i < page * 5 && i < RideMusic.shortCodes.size(); i++) {
+                    ChatUtil.sendMessage(sender, "&6" + keys.get(i) + "&7: " + RideMusic.shortCodes.get(keys.get(i)), false);
+                }
+                if (page < numberOfPages) {
+                    ChatUtil.sendMessage(sender, "&3Type '/ridemusic list " + (page + 1) + "' to see more.", false);
+                }
+                return true;
             }
+            return help(sender);
+        } else {
+            ChatUtil.sendMessage(player, "&cYou don't have permission to do that!", true);
             return true;
         }
-        return help(sender);
     }
 
     private boolean help(CommandSender sender) {
@@ -80,4 +86,25 @@ public class RideCommandExecutor implements CommandExecutor {
         return true;
     }
 
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String Label, String[] args) {
+        List<String> suggestions = new ArrayList<>();
+        if (args.length == 1) {
+            suggestions.add("help");
+            suggestions.add("add");
+            suggestions.add("remove");
+            suggestions.add("list");
+            return StringUtil.copyPartialMatches(args[0], suggestions, new ArrayList<>());
+        }
+
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("remove")) {
+                List<String> keys = new ArrayList<>(RideMusic.shortCodes.keySet());
+                suggestions.addAll(keys);
+                return StringUtil.copyPartialMatches(args[args.length - 1], suggestions, new ArrayList<>());
+            }
+        }
+
+        return suggestions;
+    }
 }

@@ -3,16 +3,15 @@ package nl.parrotlync.ridemusic;
 import com.bergerkiller.bukkit.tc.events.SignActionEvent;
 import com.bergerkiller.bukkit.tc.events.SignChangeActionEvent;
 import com.bergerkiller.bukkit.tc.signactions.SignAction;
-import com.bergerkiller.bukkit.tc.signactions.SignActionType;
-import de.leonhard.storage.Json;
 import net.mcjukebox.plugin.bukkit.api.JukeboxAPI;
 import net.mcjukebox.plugin.bukkit.api.ResourceType;
 import net.mcjukebox.plugin.bukkit.api.models.Media;
 import nl.parrotlync.ridemusic.util.ChatUtil;
-import org.bukkit.Bukkit;
+import nl.parrotlync.ridemusic.util.DataUtil;
+
+import java.util.HashMap;
 
 public class RideSignAction extends SignAction {
-    private Json json = new Json("shortcodes", "plugins/RideMusic");
 
     @Override
     public boolean match(SignActionEvent info) {
@@ -24,14 +23,14 @@ public class RideSignAction extends SignAction {
         if (!info.isPowered()) { return; }
         String name = info.getGroup().getProperties().getTrainName();
         if (info.getLine(2).equalsIgnoreCase("music")) {
-            String url = String.valueOf(json.get(info.getLine(3)));
+            String url = String.valueOf(RideMusic.shortCodes.get(info.getLine(3)));
             Media media = new Media(ResourceType.MUSIC, url);
             media.setLooping(false);
             JukeboxAPI.getShowManager().getShow(name).play(media);
             return;
         }
         if (info.getLine(2).equalsIgnoreCase("sound")) {
-            String url = String.valueOf(json.get(info.getLine(3)));
+            String url = String.valueOf(RideMusic.shortCodes.get(info.getLine(3)));
             Media media = new Media(ResourceType.SOUND_EFFECT, url);
             JukeboxAPI.getShowManager().getShow(name).play(media);
             return;
@@ -48,7 +47,7 @@ public class RideSignAction extends SignAction {
         } else if (event.isTrainSign()) {
             if (event.getPlayer().hasPermission("ridemusic.build")) {
                 if (event.getLine(2).equalsIgnoreCase("music") || event.getLine(2).equalsIgnoreCase("sound")) {
-                    String url = String.valueOf(json.get(event.getLine(3)));
+                    String url = String.valueOf(RideMusic.shortCodes.get(event.getLine(3)));
                     if (url.equals("null")) {
                         ChatUtil.sendMessage(event.getPlayer(), "&cThat shortcode doesn't exist. Please add it first with &3/ridemusic add", true);
                         return false;
